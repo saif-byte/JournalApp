@@ -1,6 +1,6 @@
 package com.practice.journalApp.Controller;
 
-import com.practice.journalApp.JournalEntry;
+import com.practice.journalApp.Entities.JournalEntry;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/journal")
+@RequestMapping("/_journal")
 public class JournalEntryController {
-    private Map<Long, JournalEntry> entries = new HashMap<>();
+    private Map<String, JournalEntry> entries = new HashMap<>();
     @GetMapping("/get-all")
     public ArrayList<JournalEntry> getAll(){
         return new ArrayList<>(entries.values());
@@ -26,7 +26,7 @@ public class JournalEntryController {
         return entries.get(id);
     }
     @PutMapping("update-by-id/{id}")
-    public JournalEntry updateById(@PathVariable Long id ,  @RequestBody JournalEntry updatedEntry ){
+    public JournalEntry updateById(@PathVariable String id ,  @RequestBody JournalEntry updatedEntry ){
         entries.put(id , updatedEntry );
         return entries.get(id);
     }
