@@ -26,14 +26,14 @@ public class JournalEntryControllerv2 {
     }
     @PostMapping("/submit-entry/{userName}")
     public ResponseEntity<?> submitEntry(@RequestBody JournalEntry newEntry , @PathVariable String userName){
-        try {
+
             newEntry.setDate(LocalDateTime.now());
             journalEntryService.saveEntry(newEntry , userName);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+
+//        catch (Exception e){
+//            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+//        }
         }
 
     @GetMapping("/get-by-id/{id}")

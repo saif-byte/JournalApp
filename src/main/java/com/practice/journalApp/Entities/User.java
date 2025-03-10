@@ -1,5 +1,6 @@
 package com.practice.journalApp.Entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Document
 @Data
+@AllArgsConstructor
 public class User {
     @Id
     private ObjectId id ;
