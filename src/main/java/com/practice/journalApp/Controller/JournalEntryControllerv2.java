@@ -1,7 +1,9 @@
 package com.practice.journalApp.Controller;
 
 import com.practice.journalApp.Entities.JournalEntry;
+import com.practice.journalApp.Entities.User;
 import com.practice.journalApp.Services.JournalEntryService;
+import com.practice.journalApp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,18 @@ import java.util.*;
 public class JournalEntryControllerv2 {
     @Autowired
     private JournalEntryService journalEntryService;
-    @GetMapping("/get-all")
-    public List<JournalEntry> getAll(){
-        return journalEntryService.getAll();
+    @Autowired
+    private UserService userService;
+    @GetMapping("/get-all/{userName}")
+    public List<JournalEntry> getAll(@PathVariable String userName){
+        User user = userService.getByuserName(userName);
+        return user.getJournalEntries();
     }
-    @PostMapping("/submit-entry")
-    public ResponseEntity<?> submitEntry(@RequestBody JournalEntry newEntry){
+    @PostMapping("/submit-entry/{userName}")
+    public ResponseEntity<?> submitEntry(@RequestBody JournalEntry newEntry , @PathVariable String userName){
         try {
             newEntry.setDate(LocalDateTime.now());
-            journalEntryService.saveEntry(newEntry);
+            journalEntryService.saveEntry(newEntry , userName);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (Exception e){
@@ -56,9 +61,9 @@ public class JournalEntryControllerv2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable String id){
-        journalEntryService.deletebyId(id);
+    @DeleteMapping("delete/{userName}/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable String id , @PathVariable String userName){
+        journalEntryService.deletebyId(id , userName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
