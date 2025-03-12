@@ -21,7 +21,7 @@ public class JournalEntryService {
         User user = userService.getByuserName(userName);
         JournalEntry saved= journalEntryRepository.save(journalEntry);
         user.getJournalEntries().add(saved);
-        userService.saveEntry(user);
+        userService.saveUser(user);
     }
     public void saveEntry(JournalEntry journalEntry){
         JournalEntry saved= journalEntryRepository.save(journalEntry);
@@ -39,7 +39,7 @@ public class JournalEntryService {
     public void deletebyId(String id, String userName){
         User user = userService.getByuserName(userName);
         user.getJournalEntries().removeIf(x -> x.getId().equals(id) );
-        userService.saveEntry(user);
+        userService.saveUser(user);
         journalEntryRepository.deleteById(id);
 
     }

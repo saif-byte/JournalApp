@@ -7,6 +7,8 @@ import com.practice.journalApp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,31 +20,26 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserService userService;
-    @GetMapping("/get-all")
-    public List<User> getAll(){
-        return userService.getAll();
-    }
-    @PostMapping("/create-user")
-    public ResponseEntity<?> submitEntry(@RequestBody User newUser){
-        try {
-            userService.saveEntry(newUser);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
-        }
+
 
     @PutMapping
     public ResponseEntity<User> updateById(@RequestBody User updatedUser ){
-        User oldUser =  userService.getByuserName(updatedUser.getUserName());
-        if(oldUser != null){
-            oldUser.setUserName(updatedUser.getUserName());
-            oldUser.setPassword(updatedUser.getPassword());
-            userService.saveEntry(oldUser);
-            return new ResponseEntity<User>(oldUser, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User oldUser =  userService.getByuserName(userName);
+        oldUser.setUserName(updatedUser.getUserName());
+        oldUser.setPassword(updatedUser.getPassword());
+        userService.saveNewUser(oldUser);
+        return new ResponseEntity<User>(HttpStatus.OK);
+
+
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user =  userService.getByuserName(userName);
+        userService.deletebyUsername(userName);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

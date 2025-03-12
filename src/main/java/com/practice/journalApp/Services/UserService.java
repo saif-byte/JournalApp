@@ -17,8 +17,13 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    public void saveEntry(User user){
+    public void saveNewUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getRoles().add("USER");
+        userRepository.save(user);
+    }
+    public void saveUser(User user){
+
         userRepository.save(user);
     }
 
@@ -28,7 +33,9 @@ public class UserService {
     public User getByuserName(String userName){
         return userRepository.findByuserName(userName);
     }
-
+    public void deletebyUsername(String username){
+        userRepository.deleteByUserName(username);
+    }
     public void deletebyId(String id){
         userRepository.deleteById(id);
     }
