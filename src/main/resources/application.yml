@@ -9,3 +9,16 @@ spring:
       auto-index-creation : true
   main:
     allow-circular-references : true
+  mail:
+    host : smtp.gmail.com
+    port : 587
+    username : saif4rmkhan@gmail.com
+    password : xxxxxxxxxxx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
