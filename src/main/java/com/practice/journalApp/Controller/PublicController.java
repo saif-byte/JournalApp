@@ -1,6 +1,7 @@
 package com.practice.journalApp.Controller;
 
 import com.practice.journalApp.Dto.LoginRequestDto;
+import com.practice.journalApp.Dto.LoginResponseDto;
 import com.practice.journalApp.Entities.User;
 import com.practice.journalApp.Services.UserService;
 import com.practice.journalApp.Utils.JWTUtils;
@@ -11,11 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/public")
 public class PublicController {
@@ -46,7 +45,8 @@ public class PublicController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName() , user.getPassword()));
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
             String jwtToken = jwtUtils.generateToken(userDetails.getUsername());
-            return new ResponseEntity<>(jwtToken , HttpStatus.OK);
+            LoginResponseDto loginResponseDto = new LoginResponseDto(user.getUserName() , jwtToken);
+            return new ResponseEntity<>(loginResponseDto , HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
